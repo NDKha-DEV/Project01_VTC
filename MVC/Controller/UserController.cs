@@ -21,6 +21,7 @@ public static class UserController
             //Menu.LoginMenu();
             ConsoleUI uI = new ConsoleUI();
             //uI.ApplicationLogoBeforeLogin();
+            uI.ApplicationLogoBeforeLogin();
             uI.Title("LOGIN");
             uI.GreenMessage("Input User name and password to LOGIN or input User Name = 0 to EXIT.");
             Console.WriteLine();
@@ -31,6 +32,7 @@ public static class UserController
                 var username = AnsiConsole.Ask<string>("[bold Aqua]->[/] [bold Aqua]Username:[/] ");
                 if (username == "0")
                 {
+                    Environment.Exit(0);
                     break;
                 }
                 var password = AnsiConsole.Prompt(
@@ -42,7 +44,7 @@ public static class UserController
 
                 if (user == null)
                 {
-                    AnsiConsole.Markup("[bold red]Username does not exist, input any key to go back![/]");
+                    AnsiConsole.Markup("[bold red]Incorrect Username or Password, input any key to go back![/]");
                     Console.ReadKey();
                 }
                 else
@@ -50,14 +52,22 @@ public static class UserController
                     // check the password
                     if (user.Password != password)
                     {
-                        AnsiConsole.Markup("[bold red]Invalid password, input any key to go back![/]");
+                        AnsiConsole.Markup("[bold red]Incorrect Username or Password, input any key to go back![/]");
                         Console.ReadKey();
                     }
                     else
                     {
                         UserController.user = user;
                         loginSuccess = true;
-                        MenuController.MainMenuController();
+                        if (username == "admin")
+                        {
+                            MenuController.DefaultMenuController();
+                        }
+                        else
+                        {
+                            MenuController.MainMenuController();
+                        }
+                        
                     }
                 }
             }
@@ -244,7 +254,8 @@ public static class UserController
             user = null;
             AnsiConsole.MarkupLine("[bold green]Log out successful, press any key to continue[/]");
             Console.ReadKey();
-            MenuController.DefaultMenuController();
+            // MenuController.DefaultMenuController();
+            UserController.Login();
         }
         else if (confirmation.ToUpper() == "N")
         {
