@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Controller;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using Spectre.Console;
@@ -19,13 +20,13 @@ public static class MenuController
             switch (choice)
             {
                 case "1":
-                    UserController.Login();
+                    RoomController.ManagementRoom();
                     break;
                 case "2":
                     UserController.Register();
                     break;
                 case "0":
-                    Environment.Exit(0);
+                    UserController.Logout();
                     break;
                 default:
                     Console.WriteLine("");
@@ -50,22 +51,22 @@ public static class MenuController
                     Console.Clear();
                     CustomerController.ManagementCustomer();
                     break;
+                // case "2":
+                //     Console.Clear();
+                //     CheckingRoomController.CheckingRoom();
+                //     break;
                 case "2":
-                    Console.Clear();
-                    CheckingRoomController.CheckingRoom();
-                    break;
-                case "3":
                     Console.Clear();
                     BookingController.ManagementBooking();
                     break;
-                case "4":
+                case "3":
                     Console.Clear();
                     BillController.ManagmentBill();
                     break;
-                case "5":
-                    Console.Clear();
-                    UserController.EditProfileController();
-                    break;
+                // case "5":
+                //     Console.Clear();
+                //     UserController.EditProfileController();
+                //     break;
                 case "0":
                     //Console.Clear();
                     UserController.Logout();
