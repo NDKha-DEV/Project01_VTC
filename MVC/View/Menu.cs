@@ -7,14 +7,12 @@ class Menu
     // Display the Welcome screen panel
     public static void Panel()
     {
-         // Tạo tiêu đề lớn
         var panel = new Panel(new FigletText("HRM APP").Centered().Color(Color.Aqua))
         {
             Border = BoxBorder.Square,
             Padding = new Padding(1, 1, 1, 1),
         };
 
-        // Hiển thị tiêu đề
         AnsiConsole.Write(panel);
     }
 
@@ -24,19 +22,13 @@ class Menu
     {
         AnsiConsole.Clear();
         ConsoleUI uI = new ConsoleUI();
-        // Display the large title
-         var panel = new Panel(new FigletText("HRM APP").Centered().Color(Color.Aqua))
-        {
-            Border = BoxBorder.None,
-            Padding = new Padding(1, 1),
-            Header = new PanelHeader("[yellow]Welcome to[/]").Centered(),
-        };
-//        uI.ApplicationLogoBeforeLogin();
+        uI.ApplicationLogoBeforeLogin();
+        uI.Title("Main Menu");
         var table1 = new Table()
         {
             Border = TableBorder.Rounded,
         };
-        table1.AddColumn(new TableColumn("[bold yellow]1.[/][bold] Login[/]"));
+        table1.AddColumn(new TableColumn("[bold yellow]1.[/][bold] Room[/]"));
         table1.Expand();
         var table2 = new Table()
         {
@@ -49,18 +41,10 @@ class Menu
         {
             Border = TableBorder.Rounded,
         };
-        table3.AddColumn(new TableColumn("[bold yellow]0.[/][bold] Exit[/]"));
+        table3.AddColumn(new TableColumn("[bold yellow]0.[/][bold] Logout[/]"));
         table3.Expand();
         var mainTable = new Table();
-        mainTable.AddColumn(new TableColumn(panel));
-        // mainTable.AddColumn(new TableColumn(@"
-        //     ██╗  ██╗██████╗ ███╗   ███╗     █████╗ ██████╗ ██████╗ 
-        //     ██║  ██║██╔══██╗████╗ ████║    ██╔══██╗██╔══██╗██╔══██╗
-        //     ███████║██████╔╝██╔████╔██║    ███████║██████╔╝██████╔╝
-        //     ██╔══██║██╔══██╗██║╚██╔╝██║    ██╔══██║██╔═══╝ ██╔═══╝ 
-        //     ██║  ██║██║  ██║██║ ╚═╝ ██║    ██║  ██║██║     ██║     
-        //     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝    ╚═╝  ╚═╝╚═╝     ╚═╝             
-        //     ----------------------------+--------------------------            ").Centered()).RoundedBorder().Centered();
+        mainTable.AddColumn(new TableColumn("")).RoundedBorder().Centered();
         mainTable.AddRow(table1);
         mainTable.AddRow(table2);
         mainTable.AddRow(table3);
@@ -71,43 +55,40 @@ class Menu
     public static void MainMenu()
     {
         AnsiConsole.Clear();
-        // Tạo tiêu đề lớn
-        var panel = new Panel(new FigletText("HRM APP").Centered().Color(Color.Aqua))
-        {
-            Border = BoxBorder.None,
-            Padding = new Padding(1, 1, 1, 1),
-        };
+        ConsoleUI uI = new ConsoleUI();
+        uI.ApplicationLogoBeforeLogin();
+        uI.Title("Main Menu");
         var table1 = new Table()
         {
             Border = TableBorder.Rounded,
         };
         table1.AddColumn(new TableColumn("[bold yellow]1.[/][bold] Customer[/]"));
         table1.Expand();
-        var table2 = new Table()
-        {
-            Border = TableBorder.Rounded,
-        };
-        table2.AddColumn(new TableColumn("[bold yellow]2.[/][bold] Check room[/]"));
-        table2.Expand();
+        // var table2 = new Table()
+        // {
+        //     Border = TableBorder.Rounded,
+        // };
+        // table2.AddColumn(new TableColumn("[bold yellow]2.[/][bold] Check room[/]"));
+        // table2.Expand();
 
         var table3 = new Table()
         {
             Border = TableBorder.Rounded,
         };
-        table3.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Booking[/]"));
+        table3.AddColumn(new TableColumn("[bold yellow]2.[/][bold] Booking[/]"));
         table3.Expand();
         var table4 = new Table()
         {
             Border = TableBorder.Rounded,
         };
-        table4.AddColumn(new TableColumn("[bold yellow]4.[/][bold] Bill[/]"));
+        table4.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Bill[/]"));
         table4.Expand();
-        var table5 = new Table()
-        {
-            Border = TableBorder.Rounded,
-        };
-        table5.AddColumn(new TableColumn("[bold yellow]5.[/][bold] Edit profile[/]"));
-        table5.Expand();
+        // var table5 = new Table()
+        // {
+        //     Border = TableBorder.Rounded,
+        // };
+        // table5.AddColumn(new TableColumn("[bold yellow]5.[/][bold] Edit profile[/]"));
+        // table5.Expand();
         var table6 = new Table()
         {
             Border = TableBorder.Rounded,
@@ -115,12 +96,12 @@ class Menu
         table6.AddColumn(new TableColumn("[bold yellow]0.[/][bold] Log out[/]"));
         table6.Expand();
         var mainTable = new Table();
-        mainTable.AddColumn(new TableColumn(panel));
+        mainTable.AddColumn(new TableColumn("")).RoundedBorder().Centered();
         mainTable.AddRow(table1);
-        mainTable.AddRow(table2);
+        // mainTable.AddRow(table2);
         mainTable.AddRow(table3);
         mainTable.AddRow(table4);
-        mainTable.AddRow(table5);
+        // mainTable.AddRow(table5);
         mainTable.AddRow(table6);
 
         AnsiConsole.Write(mainTable);
@@ -128,10 +109,10 @@ class Menu
 
     public static void CustomerMenu()
     {
-        Console.Clear();
-        // Tạo tiêu đề lớn
+        AnsiConsole.Clear();
         ConsoleUI uI= new ConsoleUI();
-        uI.Title("Customer");
+        uI.ApplicationLogoBeforeLogin();
+        uI.Title("Customer Menu");
         var table1 = new Table()
         {
             Border = TableBorder.Rounded,
@@ -145,17 +126,17 @@ class Menu
         table2.AddColumn(new TableColumn("[bold yellow]2.[/][bold] Update customer[/]"));
         table2.Expand();
 
-        var table3 = new Table()
-        {
-            Border = TableBorder.Rounded,
-        };
-        table3.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Delete customer[/]"));
-        table3.Expand();
+        // var table3 = new Table()
+        // {
+        //     Border = TableBorder.Rounded,
+        // };
+        // table3.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Delete customer[/]"));
+        // table3.Expand();
         var table4 = new Table()
         {
             Border = TableBorder.Rounded,
         };
-        table4.AddColumn(new TableColumn("[bold yellow]4.[/][bold] Search customer by name[/]"));
+        table4.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Search customer by name[/]"));
         table4.Expand();
         var table5 = new Table()
         {
@@ -167,7 +148,7 @@ class Menu
         //mainTable.AddColumn(new TableColumn(panel));
         mainTable.AddColumn(new TableColumn(table1)).RoundedBorder().Centered();
         mainTable.AddRow(table2);
-        mainTable.AddRow(table3);
+        // mainTable.AddRow(table3);
         mainTable.AddRow(table4);
         mainTable.AddRow(table5);
 
@@ -176,14 +157,11 @@ class Menu
 
     public static void UpdateCustomerMenu()
     {
-        Console.Clear();
+        AnsiConsole.Clear();
         // Tạo tiêu đề lớn
-        var panel = new Panel(new FigletText("HRM APP").Centered().Color(Color.Aqua))
-        {
-            Border = BoxBorder.None,
-            Padding = new Padding(1, 1, 1, 1),
-            Header = new PanelHeader("[bold yellow]WELLCOME TO HRM APP[/]").Centered(),
-        };
+        ConsoleUI uI = new ConsoleUI();
+        uI.ApplicationLogoBeforeLogin();
+        uI.Title("Update Customer");
         var table1 = new Table()
         {
             Border = TableBorder.Rounded,
@@ -207,7 +185,7 @@ class Menu
         {
             Border = TableBorder.Rounded,
         };
-        table4.AddColumn(new TableColumn("[bold yellow]4.[/][bold] Update Number of customers[/]"));
+        table4.AddColumn(new TableColumn("[bold yellow]4.[/][bold] Update Number of participants[/]"));
         table4.Expand();
         var table5 = new Table()
         {
@@ -216,7 +194,7 @@ class Menu
         table5.AddColumn(new TableColumn("[bold yellow]0.[/][bold] Return[/]"));
         table5.Expand();
         var mainTable = new Table();
-        mainTable.AddColumn(new TableColumn(panel));
+        mainTable.AddColumn(new TableColumn("")).RoundedBorder().Centered();
         mainTable.AddRow(table1);
         mainTable.AddRow(table2);
         mainTable.AddRow(table3);
@@ -228,8 +206,7 @@ class Menu
 
     public static void BookingMenu()
     {
-        Console.Clear();
-        // Tạo tiêu đề lớn
+        AnsiConsole.Clear();
         ConsoleUI uI = new ConsoleUI();
         uI.Title("Booking");
         var table1 = new Table()
@@ -244,18 +221,18 @@ class Menu
         };
         table2.AddColumn(new TableColumn("[bold yellow]2.[/][bold] Update booking[/]"));
         table2.Expand();
-        var table3 = new Table()
-        {
-            Border = TableBorder.Rounded,
-        };
-        table3.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Delete booking[/]"));
-        table3.Expand();
+        // var table3 = new Table()
+        // {
+        //     Border = TableBorder.Rounded,
+        // };
+        // table3.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Delete booking[/]"));
+        // table3.Expand();
 
         var table4 = new Table()
         {
             Border = TableBorder.Rounded,
         };
-        table4.AddColumn(new TableColumn("[bold yellow]4.[/][bold] Search booking by customer ID[/]"));
+        table4.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Search booking by customer ID[/]"));
         table4.Expand();
         var table5 = new Table()
         {
@@ -265,9 +242,11 @@ class Menu
         table5.Expand();
 
         var mainTable = new Table();
-        mainTable.AddColumn(new TableColumn(table1)).RoundedBorder().Centered();
+        // mainTable.AddColumn(new TableColumn(table1)).RoundedBorder().Centered();
+        mainTable.AddColumn(new TableColumn("")).RoundedBorder().Centered();
+        mainTable.AddRow(table1);
         mainTable.AddRow(table2);
-        mainTable.AddRow(table3);
+        // mainTable.AddRow(table3);
         mainTable.AddRow(table4);
         mainTable.AddRow(table5);
 
@@ -276,7 +255,7 @@ class Menu
 
     public static void BillMenu()
     {
-        Console.Clear();
+        AnsiConsole.Clear();
         // Tạo tiêu đề lớn
         ConsoleUI uI= new ConsoleUI();
         uI.Title("Bill");
@@ -293,23 +272,23 @@ class Menu
         table2.AddColumn(new TableColumn("[bold yellow]2.[/][bold] Update bill[/]"));
         table2.Expand();
 
-        var table3 = new Table()
-        {
-            Border = TableBorder.Rounded,
-        };
-        table3.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Delete bill[/]"));
-        table3.Expand();
+        // var table3 = new Table()
+        // {
+        //     Border = TableBorder.Rounded,
+        // };
+        // table3.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Delete bill[/]"));
+        // table3.Expand();
         var table4 = new Table()
         {
             Border = TableBorder.Rounded,
         };
-        table4.AddColumn(new TableColumn("[bold yellow]4.[/][bold] Search bill by customer ID[/]"));
+        table4.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Search bill by customer ID[/]"));
         table4.Expand();
         var table5 = new Table()
         {
             Border = TableBorder.Rounded,
         };
-        table5.AddColumn(new TableColumn("[bold yellow]5.[/][bold] Pay bill[/]"));
+        table5.AddColumn(new TableColumn("[bold yellow]4.[/][bold] Pay bill[/]"));
         table5.Expand();
         var table6 = new Table()
         {
@@ -319,12 +298,189 @@ class Menu
         table6.Expand();
         var mainTable = new Table();
         //mainTable.AddColumn(new TableColumn(panel));
-        mainTable.AddColumn(new TableColumn(table1)).RoundedBorder().Centered();
+        mainTable.AddColumn(new TableColumn("")).RoundedBorder().Centered();
+        mainTable.AddRow(table1);
+        mainTable.AddRow(table2);
+        // mainTable.AddRow(table3);
+        mainTable.AddRow(table4);
+        mainTable.AddRow(table5);
+        mainTable.AddRow(table6);
+
+        AnsiConsole.Write(mainTable);
+    }
+
+    public static void UpdateBillMenu()
+    {
+        AnsiConsole.Clear();
+        // Tạo tiêu đề lớn
+        ConsoleUI uI = new ConsoleUI();
+        uI.ApplicationLogoBeforeLogin();
+        Console.WriteLine();
+        uI.Title("Update Bill");
+        Console.WriteLine();
+        var table1 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table1.AddColumn(new TableColumn("[bold yellow]1.[/][bold] Update Description[/]"));
+        table1.Expand();
+        // var table2 = new Table()
+        // {
+        //     Border = TableBorder.Rounded,
+        // };
+        // table2.AddColumn(new TableColumn("[bold yellow]2.[/][bold] Update Number of nights[/]"));
+        // table2.Expand();
+
+        // var table3 = new Table()
+        // {
+        //     Border = TableBorder.Rounded,
+        // };
+        // table3.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Update Number of rooms[/]"));
+        // table3.Expand();
+        var table4 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table4.AddColumn(new TableColumn("[bold yellow]0.[/][bold] Return[/]"));
+        table4.Expand();
+        var mainTable = new Table();
+        mainTable.AddColumn(new TableColumn("")).RoundedBorder().Centered();
+        mainTable.AddRow(table1);
+        // mainTable.AddRow(table2);
+        // mainTable.AddRow(table3);
+        mainTable.AddRow(table4);
+
+        AnsiConsole.Write(mainTable);
+    }
+    
+    public static void UpdateBookingMenu()
+    {
+        AnsiConsole.Clear();
+        // Tạo tiêu đề lớn
+        ConsoleUI uI = new ConsoleUI();
+        uI.ApplicationLogoBeforeLogin();
+        Console.WriteLine();
+        uI.Title("Update Booking");
+        Console.WriteLine();
+        var table1 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table1.AddColumn(new TableColumn("[bold yellow]1.[/][bold] Update Customer ID[/]"));
+        table1.Expand();
+        var table2 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table2.AddColumn(new TableColumn("[bold yellow]2.[/][bold] Update Date[/]"));
+        table2.Expand();
+
+        // var table3 = new Table()
+        // {
+        //     Border = TableBorder.Rounded,
+        // };
+        // table3.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Update Check Out Date[/]"));
+        // table3.Expand();
+        var table4 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table4.AddColumn(new TableColumn("[bold yellow]0.[/][bold] Return[/]"));
+        table4.Expand();
+        var mainTable = new Table();
+        mainTable.AddColumn(new TableColumn("")).RoundedBorder().Centered();
+        mainTable.AddRow(table1);
+        mainTable.AddRow(table2);
+        // mainTable.AddRow(table3);
+        mainTable.AddRow(table4);
+
+        AnsiConsole.Write(mainTable);
+    }
+
+    public static void RoomMenu()
+    {
+        AnsiConsole.Clear();    
+        ConsoleUI uI = new ConsoleUI();
+        uI.ApplicationLogoBeforeLogin();
+        uI.Title("Room Menu");
+        var table1 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table1.AddColumn(new TableColumn("[bold yellow]1.[/][bold] Add Room[/]"));
+        table1.Expand();
+        var table2 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table2.AddColumn(new TableColumn("[bold yellow]2.[/][bold] Update Room[/]"));
+        table2.Expand();
+
+        var table3 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table3.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Search Room By Room ID[/]"));
+        table3.Expand();
+        var table4 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table4.AddColumn(new TableColumn("[bold yellow]0.[/][bold] Return[/]"));
+        table4.Expand();
+        var mainTable = new Table();
+        mainTable.AddColumn(new TableColumn("")).RoundedBorder().Centered();
+        mainTable.AddRow(table1);
+        mainTable.AddRow(table2);
+        mainTable.AddRow(table3);
+        mainTable.AddRow(table4);
+
+        AnsiConsole.Write(mainTable);
+    }
+
+    public static void UpdateRoomMenu()
+    {
+        AnsiConsole.Clear();    
+        ConsoleUI uI = new ConsoleUI();
+        uI.ApplicationLogoBeforeLogin();
+        uI.Title("Update Room");
+        var table1 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table1.AddColumn(new TableColumn("[bold yellow]1.[/][bold] Update Room Number[/]"));
+        table1.Expand();
+        var table2 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table2.AddColumn(new TableColumn("[bold yellow]2.[/][bold] Update Price[/]"));
+        table2.Expand();
+
+        var table3 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table3.AddColumn(new TableColumn("[bold yellow]3.[/][bold] Update Description[/]"));
+        table3.Expand();
+        var table4 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table4.AddColumn(new TableColumn("[bold yellow]4.[/][bold] Update Room Type[/]"));
+        table4.Expand();
+        var table5 = new Table()
+        {
+            Border = TableBorder.Rounded,
+        };
+        table5.AddColumn(new TableColumn("[bold yellow]0.[/][bold] Return[/]"));
+        var mainTable = new Table();
+        mainTable.AddColumn(new TableColumn("")).RoundedBorder().Centered();
+        mainTable.AddRow(table1);
         mainTable.AddRow(table2);
         mainTable.AddRow(table3);
         mainTable.AddRow(table4);
         mainTable.AddRow(table5);
-        mainTable.AddRow(table6);
 
         AnsiConsole.Write(mainTable);
     }
