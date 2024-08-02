@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Spectre.Console;
 using Model;
+using UI;
 
 namespace Controller
 {
     public static class RoomController
     {
+        static ConsoleUI uI = new ConsoleUI();
         public static void ManagementRoom()
         {
             while (true)
             {
-                //Menu.RoomManagementMenu();
+                AnsiConsole.Clear();
+                Menu.RoomMenu();
                 AnsiConsole.Markup("[bold green]Enter your choice: [/]");
                 string choice = Console.ReadLine();
 
@@ -27,15 +30,14 @@ namespace Controller
                     case "2":
                         UpdateRoom();
                         break;
+                    // case "3":
+                    //     DeleteRoom();
+                    //     break;
                     case "3":
-                        DeleteRoom();
-                        break;
-                    case "4":
-                        ShowRoomById();
+                        ShowRoomByRoomID();
                         break;
                     case "0":
-                        //MainMenu
-                        break;
+                        return;
                     default:
                         AnsiConsole.MarkupLine("[bold red]Invalid choice, please enter a valid choice again![/]");
                         break;
@@ -47,55 +49,58 @@ namespace Controller
         {
             try
             {
+                AnsiConsole.Clear();
+                uI.Title("Add Room");
+                Console.WriteLine();
                 using (var db = new HotelContext())
                 {
                     Room room = new Room();
 
                     // Get room name
-                    AnsiConsole.MarkupLine("[bold green]Enter room number:[/]");
+                    AnsiConsole.Markup("[bold green]Enter room number: [/]");
                     string roomnumber = Console.ReadLine();
                     while (string.IsNullOrEmpty(roomnumber))
                     {
                         AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid room number.[/]");
-                        AnsiConsole.MarkupLine("[bold green]Enter room number:[/]");
+                        AnsiConsole.Markup("[bold green]Enter room number: [/]");
                         roomnumber = Console.ReadLine();
                     }
                     room.RoomNumber = roomnumber;
 
                     // Get room price per night
-                    AnsiConsole.MarkupLine("[bold green]Enter room price per night:[/]");
+                    AnsiConsole.Markup("[bold green]Enter room price per night: [/]");
                     decimal price;
                     while (!decimal.TryParse(Console.ReadLine(), out price))
                     {
                         AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid price.[/]");
-                        AnsiConsole.MarkupLine("[bold green]Enter room price:[/]");
+                        AnsiConsole.Markup("[bold green]Enter room price: [/]");
                     }
                     room.PricePerNight = price;
 
                     // Get room description
-                    AnsiConsole.MarkupLine("[bold green]Enter room description:[/]");
+                    AnsiConsole.Markup("[bold green]Enter room description: [/]");
                     string description = Console.ReadLine();
                     while (string.IsNullOrEmpty (description))
                     {
                         AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid room description.[/]");
-                        AnsiConsole.MarkupLine("[bold green]Enter room description:[/]");
+                        AnsiConsole.Markup("[bold green]Enter room description: [/]");
                         description = Console.ReadLine();
                     }
                     room.Description = description;
 
                     // Get room type
-                    AnsiConsole.MarkupLine("[bold green] Enter room type:[/]");
+                    AnsiConsole.Markup("[bold green]Enter room type(Double/Quad): [/]");
                     string type = Console.ReadLine();
                     while (string.IsNullOrEmpty ((type)))
                     {
                         AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid room type.[/]");
-                        AnsiConsole.MarkupLine("[bold green]Enter room type:[/]");
+                        AnsiConsole.Markup("[bold green]Enter room type(Double/Quad): [/]");
                         type = Console.ReadLine();
                     }
                     room.RoomType = type;
 
                     // Confirm adding room
-                    AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to add this room? (Y/N):[/]");
+                    AnsiConsole.MarkupLine("[bold yellow]Do you want to save? (Y/N):[/]");
                     string confirm = Console.ReadLine();
                     if (confirm.ToUpper() == "Y")
                     {
@@ -122,16 +127,17 @@ namespace Controller
         {
             try
             {
+                AnsiConsole.Clear();
+                uI.Title("Update Room");
+                Console.WriteLine();
                 using (var db = new HotelContext())
                 {
-                    Console.Clear();
-                    var Panel = new Panel("[bold green]Update Room[/]");
                     int roomId;
-                    AnsiConsole.MarkupLine("[bold green]Enter room ID to update:[/]");
+                    AnsiConsole.Markup("[bold green]Enter room ID to update: [/]");
                     while (!int.TryParse(Console.ReadLine(), out roomId))
                     {
                         AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid room ID.[/]");
-                        AnsiConsole.MarkupLine("[bold green]Enter room ID to update:[/]");
+                        AnsiConsole.Markup("[bold green]Enter room ID to update: [/]");
                     }
                     // Find the room by ID
                     var room = db.Rooms.FirstOrDefault(r => r.RoomId == roomId);
@@ -142,7 +148,7 @@ namespace Controller
                         return;
                     }
                     //Menu.RoomUpdateMenu(roomId);
-                    AnsiConsole.MarkupLine("[bold green]Enter your choice:[/]");
+                    AnsiConsole.Markup("[bold green]Enter your choice: [/]");
                     string choice =  Console.ReadLine();
                     switch (choice)
                     {
@@ -175,16 +181,19 @@ namespace Controller
 
         private static void UpdateRoomNumber(Room room)
         {
-            AnsiConsole.MarkupLine("[bold green]Enter new room number:[/]");
+            AnsiConsole.Clear();
+            uI.Title("Update Room Number");
+            Console.WriteLine();
+            AnsiConsole.Markup("[bold green]Enter new room number: [/]");
             string roomnumber = Console.ReadLine();
             while (string.IsNullOrEmpty(roomnumber))
             {
                 AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid room number.[/]");
-                AnsiConsole.MarkupLine("[bold green]Enter new room number:[/]");
+                AnsiConsole.Markup("[bold green]Enter new room number: [/]");
                 roomnumber = Console.ReadLine();
             }
             // Confirm updating room number
-            AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to update the room number? (Y/N):[/]");
+            AnsiConsole.MarkupLine("[bold yellow]Do you want to save? (Y/N):[/]");
             string confirm = Console.ReadLine();
             if (confirm.ToUpper() == "Y")
             {
@@ -201,15 +210,18 @@ namespace Controller
 
         private static void UpdateRoomPrice(Room room)
         {
-            AnsiConsole.MarkupLine("[bold green]Enter new room price per night:[/]");
+            AnsiConsole.Clear();
+            uI.Title("Update Room Price");
+            Console.WriteLine();
+            AnsiConsole.Markup("[bold green]Enter new room price per night: [/]");
             decimal price;
             while (!decimal.TryParse(Console.ReadLine(), out price))
             {
                 AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid price.[/]");
-                AnsiConsole.MarkupLine("[bold green]Enter new room price per night:[/]");
+                AnsiConsole.Markup("[bold green]Enter new room price per night: [/]");
             }
             // Confirm updated room price
-            AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to update room price per night? (Y/N):[/]");
+            AnsiConsole.MarkupLine("[bold yellow]Do you want to save? (Y/N):[/]");
             string confirm = Console.ReadLine();
             if (confirm.ToUpper() == "Y")
             {
@@ -226,16 +238,19 @@ namespace Controller
 
         private static void UpdateRoomDescription(Room room)
         {
-            AnsiConsole.MarkupLine("[bold green]Enter new room description:[/]");
+            AnsiConsole.Clear();
+            uI.Title("Update Room Description");
+            Console.WriteLine();
+            AnsiConsole.Markup("[bold green]Enter new room description: [/]");
             string description = Console.ReadLine();
             while (string.IsNullOrEmpty(description))
             {
                 AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid room description.[/]");
-                AnsiConsole.MarkupLine("[bold green]Enter new room description:[/]");
+                AnsiConsole.Markup("[bold green]Enter new room description: [/]");
                 description = Console.ReadLine();
             }
             //Confirm updating room description
-            AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to update the room description? (Y/N)[/]");
+            AnsiConsole.MarkupLine("[bold yellow]Do you want to save? (Y/N)[/]");
             string confirm = Console.ReadLine();
             if (confirm.ToUpper() == "Y")
             {
@@ -252,16 +267,19 @@ namespace Controller
 
         private static void UpdateRoomType(Room room)
         {
-            AnsiConsole.MarkupLine("[bold green]Enter new room type:[/]");
+            AnsiConsole.Clear();
+            uI.Title("Update Room Type");
+            Console.WriteLine();
+            AnsiConsole.Markup("[bold green]Enter new room type(Double/Quad): [/]");
             string type = Console.ReadLine();
             while (string.IsNullOrEmpty(type))
             {
                 AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid room type.[/]");
-                AnsiConsole.MarkupLine("[bold green]Enter new room type:[/]");
+                AnsiConsole.Markup("[bold green]Enter new room type(Double/Quad): [/]");
                 type = Console.ReadLine();
             }
             // Confirm update room type
-            AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to update the room type? (Y/N):[/]");
+            AnsiConsole.MarkupLine("[bold yellow]Do you want to save? (Y/N):[/]");
             string confirm = Console.ReadLine();
             if (confirm.ToUpper() == "Y")
             {
@@ -277,62 +295,63 @@ namespace Controller
         }
 
         // Controller delete room
-        public static void DeleteRoom()
-        {
-            try
-            {
-                using (var db = new HotelContext())
-                {
-                    Console.Clear();
-                    var Panel = new Panel("[bold green]Delete Room[/]");
-                    int roomId;
-                    AnsiConsole.MarkupLine("[bold green]Enter room ID to delete:[/]");
-                    while (!int.TryParse(Console.ReadLine(), out roomId))
-                    {
-                        AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid room ID.[/]");
-                        AnsiConsole.MarkupLine("[bold green]Enter room ID to update:[/]");
-                    }
-                    // Find the room by ID
-                    var room = db.Rooms.FirstOrDefault(r => r.RoomId == roomId);
-                    if (room == null)
-                    {
-                        AnsiConsole.MarkupLine("[bold red]Room not found![/]");
-                        Console.ReadKey();
-                        return;
-                    }
-                    AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to delete this room? (Y/N):[/]");
-                    string confirm = Console.ReadLine();
-                    if (confirm.ToUpper() == "Y")
-                    {
-                        db.Rooms.Remove(room);
-                        db.SaveChanges();
-                        AnsiConsole.MarkupLine("[bold green]Room deleted successfully!, press any key to go back![/]");
-                        Console.ReadKey();
-                    }
-                    else if (confirm.ToUpper() == "N")
-                    {
-                        AnsiConsole.MarkupLine("[bold yellow]Room not deleted!, press any key to go back![/]");
-                        Console.ReadKey();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                AnsiConsole.MarkupLine("[bold red]Error: [/]" + ex.Message);
-            }
-        }
+        // public static void DeleteRoom()
+        // {
+        //     try
+        //     {
+        //         using (var db = new HotelContext())
+        //         {
+        //             Console.Clear();
+        //             var Panel = new Panel("[bold green]Delete Room[/]");
+        //             int roomId;
+        //             AnsiConsole.MarkupLine("[bold green]Enter room ID to delete:[/]");
+        //             while (!int.TryParse(Console.ReadLine(), out roomId))
+        //             {
+        //                 AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid room ID.[/]");
+        //                 AnsiConsole.MarkupLine("[bold green]Enter room ID to update:[/]");
+        //             }
+        //             // Find the room by ID
+        //             var room = db.Rooms.FirstOrDefault(r => r.RoomId == roomId);
+        //             if (room == null)
+        //             {
+        //                 AnsiConsole.MarkupLine("[bold red]Room not found![/]");
+        //                 Console.ReadKey();
+        //                 return;
+        //             }
+        //             AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to delete this room? (Y/N):[/]");
+        //             string confirm = Console.ReadLine();
+        //             if (confirm.ToUpper() == "Y")
+        //             {
+        //                 db.Rooms.Remove(room);
+        //                 db.SaveChanges();
+        //                 AnsiConsole.MarkupLine("[bold green]Room deleted successfully!, press any key to go back![/]");
+        //                 Console.ReadKey();
+        //             }
+        //             else if (confirm.ToUpper() == "N")
+        //             {
+        //                 AnsiConsole.MarkupLine("[bold yellow]Room not deleted!, press any key to go back![/]");
+        //                 Console.ReadKey();
+        //             }
+        //         }
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         AnsiConsole.MarkupLine("[bold red]Error: [/]" + ex.Message);
+        //     }
+        // }
 
         // Searching room
-        public static Table ShowRoomById()
+        public static Table ShowRoomByRoomID()
         {
             //try
             //{
                 using (var db = new HotelContext())
                 {
-                    Console.Clear();
-                    var Panel = new Panel("[bold green]Update Room[/]");
+                    AnsiConsole.Clear();
+                    uI.Title("Show Room By Room ID");
+                    Console.WriteLine();
                     int roomId;
-                    AnsiConsole.MarkupLine("[bold green]Enter room ID to update:[/]");
+                    AnsiConsole.Markup("[bold green]Enter room ID to update:[/]");
                     while (!int.TryParse(Console.ReadLine(), out roomId))
                     {
                         AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid room ID.[/]");
