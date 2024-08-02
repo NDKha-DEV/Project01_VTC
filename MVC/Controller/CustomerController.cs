@@ -14,7 +14,8 @@ public static class CustomerController
     public static void ManagementCustomer()
     {
         while (true)
-        {
+        {    
+            AnsiConsole.Clear();
             Menu.CustomerMenu();
             AnsiConsole.Markup("[bold green]Enter your choice: [/]");
             string choice = Console.ReadLine();
@@ -27,10 +28,10 @@ public static class CustomerController
                 case "2":
                     UpdateCustomer();
                     break;
+                // case "3":
+                //     DeleteCustomer();
+                //     break;
                 case "3":
-                    DeleteCustomer();
-                    break;
-                case "4":
                     SearchingCustomer();
                     break;
                 case "0":
@@ -48,18 +49,18 @@ public static class CustomerController
         try
         {
             ConsoleUI uI = new ConsoleUI();
-            Console.Clear();
+            AnsiConsole.Clear();
             uI.Title("Add Customer");
             using var db = new HotelContext();
             Customer customer = new Customer();
             
             // Get customer name
-            AnsiConsole.MarkupLine("[bold green]Enter customer name:[/]");
+            AnsiConsole.Markup("[bold green]Enter customer name: [/]");
             string name = Console.ReadLine();
             while (string.IsNullOrEmpty(name))
             {
                 AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid customer name.[/]");
-                AnsiConsole.MarkupLine("[bold green]Enter customer name:[/]");
+                AnsiConsole.Markup("[bold green]Enter customer name: [/]");
                 name = Console.ReadLine();
             }
             customer.Name = name;
@@ -87,33 +88,45 @@ public static class CustomerController
             customer.Email = email;
 
             // Get customer phone number
-            AnsiConsole.MarkupLine("[bold green]Enter customer phone number:[/]");
-            string phonenumber = Console.ReadLine();
-            while (string.IsNullOrEmpty(phonenumber))
+            string phonenumber;
+            do
             {
-                AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid customer phone number.[/]");
-                AnsiConsole.MarkupLine("[bold green]Enter customer phone number:[/]");
-                phonenumber = Console.ReadLine();
-            }
+                phonenumber = AnsiConsole.Ask<string>("[bold green]Enter phone number: [/]");
+                existingCustomer = db.Customers.FirstOrDefault(u => u.PhoneNumber == phonenumber); // Assign the existingUser value
+                if (existingCustomer != null)
+                {
+                    AnsiConsole.MarkupLine("[bold red]Phone number already exists! Please enter again![/]");
+                }
+                else if (!IsValidPhoneNumber(phonenumber))
+                {
+                    AnsiConsole.MarkupLine("[bold red]Invalid phonenumber format! Please enter a valid input![/]");
+                }
+                else if (string.IsNullOrEmpty(phonenumber))
+                {
+                    AnsiConsole.MarkupLine("[bold red]Phone number cannot be empty. Please enter again.[/]");
+                }
+            } while (existingCustomer != null || !IsValidPhoneNumber(phonenumber));
+            
             customer.PhoneNumber = phonenumber;
 
-            // Get NumberOfCustomers
-            AnsiConsole.MarkupLine("[bold green]Enter number of customers:[/]");
+            // Get NumberOfParticipants
+            AnsiConsole.Markup("[bold green]Enter number of participants: [/]");
             int numberofcustomers;
             while (!int.TryParse(Console.ReadLine(), out numberofcustomers) || numberofcustomers <= 0)
             {
                 AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid price.[/]");
-                AnsiConsole.MarkupLine("[bold green]Enter number of customers:[/]");
+                AnsiConsole.MarkupLine("[bold green]Enter number of participants: [/]");
             }
             customer.NumberOfCustomers = numberofcustomers;
             
 
             // Confirm adding customer
-            AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to add this customer? (Y/N):[/]");
+            AnsiConsole.Markup("[bold yellow]Do you want to save? (Y/N): [/]");
             string confirm = Console.ReadLine();
             if (confirm.ToUpper() == "Y")
             {
-                AnsiConsole.MarkupLine("[bold green]Room added successfully!, press any key to go back![/]");
+                AnsiConsole.MarkupLine("[bold green]Customer added successfully![/]");
+                AnsiConsole.MarkupLine("[bold yellow]Press any key to go back![/]");
                 db.Customers.Add(customer);
                 db.SaveChanges();
                 
@@ -122,8 +135,20 @@ public static class CustomerController
             }
             else
             {
-                AnsiConsole.MarkupLine("[bold yellow]Room not added!, press any key to go back![/]");
-                Console.ReadKey();
+                AnsiConsole.MarkupLine("[bold yellow]Customer not added![/]");
+                Console.WriteLine();
+                AnsiConsole.Markup("[bold yellow]Do you want to add more customers? (Y/N): [/]");
+                confirm = Console.ReadLine();
+                if (confirm.ToUpper() == "Y")
+                {
+                    AddCustomer();
+                }
+                else if (confirm.ToUpper() == "N")
+                {
+                    AnsiConsole.MarkupLine("[bold yellow]Press any key to go back![/]");
+                    Console.ReadKey();
+                }
+                // Console.ReadKey();
             }
         }
         catch (Exception ex)
@@ -147,23 +172,29 @@ public static class CustomerController
             //Console.Clear();
             // var Panel = new Panel("[bold green]Update Customer:[/]");
             int customerId;
-            AnsiConsole.MarkupLine("[bold green]Enter customer ID to update:[/]");
+            AnsiConsole.Markup("[bold green]Enter customer ID to update(Enter 0 to Exit): [/]");
             while (!int.TryParse(Console.ReadLine(), out customerId))
             {
                 AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid customer ID.[/]");
-                AnsiConsole.MarkupLine("[bold green]Enter customer ID to update:[/]");
+                AnsiConsole.Markup("[bold green]Enter customer ID to update(Enter 0 to Exit):[/]");
             }            
+            if (customerId == 0)
+            {
+                return;
+            }
+
             // Find the customer ID
             var customer = db.Customers.FirstOrDefault(u => u.CustomerId == customerId);
             if (customer == null)
             {
-                AnsiConsole.MarkupLine("[bold red]Customer not found! Press any key to go back![/]");
+                AnsiConsole.MarkupLine($"[bold red]Customer with ID {customerId} not found.[/]");
+                AnsiConsole.MarkupLine("[yellow]Press any key to go back![/]");
                 Console.ReadKey();
-                //return;
+                return;
             }
             //Menu.CustomerUpdateMenu(customerId);
             Menu.UpdateCustomerMenu();
-            AnsiConsole.MarkupLine("[bold green]Enter your choice:[/]");
+            AnsiConsole.Markup("[bold green]Enter your choice: [/]");
             string choice = Console.ReadLine();
             switch (choice)
             {
@@ -193,16 +224,20 @@ public static class CustomerController
 
     private static void UpdateCustomerName(Customer customer)
     {
-        AnsiConsole.MarkupLine("[bold green]Enter new cutomer name:[/]");
+        AnsiConsole.Clear();
+        ConsoleUI uI = new ConsoleUI();
+        uI.Title("Update Customer Name");
+        Console.WriteLine();
+        AnsiConsole.Markup("[bold green]Enter new cutomer name: [/]");
         string name = Console.ReadLine();
         while (string.IsNullOrEmpty(name))
         {
             AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid customer name.[/]");
-            AnsiConsole.MarkupLine("[bold green]Enter new customer name:[/]");
+            AnsiConsole.Markup("[bold green]Enter new customer name:[/]");
             name = Console.ReadLine();
         }        
         //Confirm updated name
-        AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to update customer name? (Y/N):[/]");
+        AnsiConsole.MarkupLine("[bold yellow]Do you want to save? (Y/N):[/]");
         string confirm = Console.ReadLine();
         if (confirm.ToUpper() == "Y")
         {
@@ -219,6 +254,10 @@ public static class CustomerController
 
     private static void UpdateCustomerEmail(Customer customer)
     {
+        AnsiConsole.Clear();
+        ConsoleUI uI = new ConsoleUI();
+        uI.Title("Update Customer Email");
+        Console.WriteLine();
         string email;
         var existingCustomer = new Customer();
         using var db = new HotelContext();
@@ -241,7 +280,7 @@ public static class CustomerController
         } while (existingCustomer != null || !IsValidEmail(email));
         
         // Confirm email
-        AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to update customer email? ([/][bold green]Y[/]/[bold red]N[/])");
+        AnsiConsole.Markup("[bold yellow]Do you want to save? (Y/N): ");
         string confirmation = Console.ReadLine();
         if (confirmation.ToUpper() == "Y")
         {
@@ -258,20 +297,36 @@ public static class CustomerController
 
     private static void UpdateCustomerNumberPhone(Customer customer)
     {
-        AnsiConsole.MarkupLine("[bold green]Enter new cutomer number phone:[/]");
-        string numberphone = Console.ReadLine();
-        while (string.IsNullOrEmpty(numberphone))
+        AnsiConsole.Clear();
+        ConsoleUI uI = new ConsoleUI();
+        uI.Title("Update Customer Phone Number");
+        Console.WriteLine();
+        string phonenumber;
+        using var db = new HotelContext();
+        var existingCustomer = new Customer();
+        do
         {
-            AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid customer number phone.[/]");
-            AnsiConsole.MarkupLine("[bold green]Enter new customer number phone:[/]");
-            numberphone = Console.ReadLine();
-        }        
+            phonenumber = AnsiConsole.Ask<string>("[bold green]Enter new phone number: [/]");
+            existingCustomer = db.Customers.FirstOrDefault(u => u.PhoneNumber == phonenumber); // Assign the existingUser value
+            if (existingCustomer != null)
+            {
+                AnsiConsole.MarkupLine("[bold red]Phone number already exists! Please enter again![/]");
+            }
+            else if (!IsValidPhoneNumber(phonenumber))
+            {
+                AnsiConsole.MarkupLine("[bold red]Invalid phonenumber format! Please enter a valid input![/]");
+            }
+            else if (string.IsNullOrEmpty(phonenumber))
+            {
+                AnsiConsole.MarkupLine("[bold red]Phone number cannot be empty. Please enter again.[/]");
+            }
+        } while (existingCustomer != null || !IsValidPhoneNumber(phonenumber));    
         //Confirm updated number phone
-        AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to update customer number phone? (Y/N):[/]");
+        AnsiConsole.Markup("[bold yellow]Do you want to save? (Y/N): [/]");
         string confirm = Console.ReadLine();
         if (confirm.ToUpper() == "Y")
         {
-            customer.PhoneNumber = numberphone;
+            customer.PhoneNumber = phonenumber;
             AnsiConsole.MarkupLine("[bold green]Customer number phone updated successfully!, Press any key to go back![/]");
             Console.ReadKey();
         }
@@ -284,26 +339,30 @@ public static class CustomerController
 
     private static void UpdateNumberOfCustomers(Customer customer)
     {
-        AnsiConsole.MarkupLine("[bold green]Enter new number of customers:[/]");
+        AnsiConsole.Clear();
+        ConsoleUI uI = new ConsoleUI();
+        uI.Title("Update Number Of Participants");
+        Console.WriteLine();
+        AnsiConsole.Markup("[bold green]Enter new number of participants: [/]");
         int numberofcustomers;
 
         while (!int.TryParse(Console.ReadLine(), out numberofcustomers) || numberofcustomers <= 0)
         {
-            AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid number of customers.[/]");
-            AnsiConsole.MarkupLine("[bold green]Enter new number of customers:[/]");
+            AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid input.[/]");
+            AnsiConsole.Markup("[bold green]Enter new number of participants:[/]");
         }
         //Confirm updated number of customers
-        AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to update the number of customers? (Y/N):[/]");
+        AnsiConsole.Markup("[bold yellow]Do you want to save? (Y/N):[/]");
         string confirm = Console.ReadLine();
         if (confirm.ToUpper() == "Y")
         {
             customer.NumberOfCustomers = numberofcustomers;
-            AnsiConsole.MarkupLine("[bold green]Number of customers updated successfully!, press any key to go back![/]");
+            AnsiConsole.MarkupLine("[bold green]Number of participants updated successfully!, press any key to go back![/]");
             Console.ReadKey();
         }
         else if (confirm.ToUpper() == "N")
         {
-            AnsiConsole.MarkupLine("[bold yellow]Number of customers not updated!, press any key to go back![/]");
+            AnsiConsole.MarkupLine("[bold yellow]Number of participants not updated!, press any key to go back![/]");
             Console.ReadKey();
         }
     }
@@ -315,52 +374,60 @@ public static class CustomerController
         string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
         return Regex.IsMatch(email, pattern);
     }
+
+    // Validate phone number format
+    private static bool IsValidPhoneNumber(string phoneNumber)
+    {
+        // Use regular expression to validate phone number format
+        string pattern = @"^\(?(\d{3})\)?[-.]? ?(\d{3})[-.]? ?(\d{4})$";
+        return Regex.IsMatch(phoneNumber, pattern);
+    }
     
     // Controller delete customer
-    public static void DeleteCustomer()
-    {
-        try
-        {
-            using (var db = new HotelContext())
-            {
-                Console.Clear();
-                var Panel = new Panel("[bold green]Delete Customer[/]");
-                int customerId;
-                AnsiConsole.MarkupLine("[bold green]Enter customer ID to delete:[/]");
-                while (!int.TryParse(Console.ReadLine(), out customerId))
-                {
-                    AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid customer ID.[/]");
-                    AnsiConsole.MarkupLine("[bold green]Enter customer ID to delete:[/]");
-                }
-                // Find the room by ID
-                var customer = db.Customers.FirstOrDefault(r => r.CustomerId == customerId);
-                if (customer == null)
-                {
-                    AnsiConsole.MarkupLine("[bold red]Customer not found![/]");
-                    Console.ReadKey();
-                    return;
-                }
-                AnsiConsole.MarkupLine("[bold yellow]Are you sure you want to delete this customer? (Y/N):[/]");
-                string confirm = Console.ReadLine();
-                if (confirm.ToUpper() == "Y")
-                {
-                    db.Customers.Remove(customer);
-                    db.SaveChanges();
-                    AnsiConsole.MarkupLine("[bold green]Customer deleted successfully!, press any key to go back![/]");
-                    Console.ReadKey();
-                }
-                else if (confirm.ToUpper() == "N")
-                {
-                    AnsiConsole.MarkupLine("[bold yellow]Room not deleted!, press any key to go back![/]");
-                    Console.ReadKey();
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            AnsiConsole.MarkupLine("[bold red]Error: [/]" + ex.Message);
-        }
-    }
+    // public static void DeleteCustomer()
+    // {
+    //     try
+    //     {
+    //         using (var db = new HotelContext())
+    //         {
+    //             Console.Clear();
+    //             var Panel = new Panel("[bold green]Delete Customer[/]");
+    //             int customerId;
+    //             AnsiConsole.MarkupLine("[bold green]Enter customer ID to delete:[/]");
+    //             while (!int.TryParse(Console.ReadLine(), out customerId))
+    //             {
+    //                 AnsiConsole.MarkupLine("[bold red]Invalid input! Please enter a valid customer ID.[/]");
+    //                 AnsiConsole.MarkupLine("[bold green]Enter customer ID to delete:[/]");
+    //             }
+    //             // Find the room by ID
+    //             var customer = db.Customers.FirstOrDefault(r => r.CustomerId == customerId);
+    //             if (customer == null)
+    //             {
+    //                 AnsiConsole.MarkupLine("[bold red]Customer not found![/]");
+    //                 Console.ReadKey();
+    //                 return;
+    //             }
+    //             AnsiConsole.MarkupLine("[bold yellow]Do you want to save? (Y/N):[/]");
+    //             string confirm = Console.ReadLine();
+    //             if (confirm.ToUpper() == "Y")
+    //             {
+    //                 db.Customers.Remove(customer);
+    //                 db.SaveChanges();
+    //                 AnsiConsole.MarkupLine("[bold green]Customer deleted successfully!, press any key to go back![/]");
+    //                 Console.ReadKey();
+    //             }
+    //             else if (confirm.ToUpper() == "N")
+    //             {
+    //                 AnsiConsole.MarkupLine("[bold yellow]Room not deleted!, press any key to go back![/]");
+    //                 Console.ReadKey();
+    //             }
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         AnsiConsole.MarkupLine("[bold red]Error: [/]" + ex.Message);
+    //     }
+    // }
 
     // Searching customer by name
     public static void SearchingCustomer()
@@ -380,8 +447,7 @@ public static class CustomerController
                 if (customers.Count == 0)
                 {
                     AnsiConsole.MarkupLine("[bold yellow]No customer found! Press any key to go back![/]");
-                    Console.ReadKey();
-                    return;
+                    customers = db.Customers.ToList();
                 }
 
                 int pageSize = 5;
@@ -419,7 +485,7 @@ public static class CustomerController
                     AnsiConsole.Write(table);
 
                     Console.WriteLine();
-                    AnsiConsole.MarkupLine("[bold]Press '[/][bold red]CRT + P[/][bold]' for previous page, '[/][bold red]CRT +N[/][bold]' for next page[/]");
+                    AnsiConsole.MarkupLine("[bold]Press '[/][bold red]CTRL + P[/][bold]' for previous page, '[/][bold red]CTRL +N[/][bold]' for next page[/]");
                     AnsiConsole.MarkupLine("[bold]Press [yellow]ESC[/] key to exit.[/]");
 
                     var keyInfo = Console.ReadKey(true);
